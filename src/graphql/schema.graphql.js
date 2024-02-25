@@ -42,10 +42,19 @@ const typeDefs = gql`
     tracks: [Track]
   }
 
+  type Playlist {
+    id: String!
+    name: String!
+    slug: String!
+    userId: String!
+    tracks: [Track]
+  }
+
   type Query {
     getTracks(limit: Int, category: String): [Track]
     getArtists(limit: Int): [Artist]
     getAlbums(limit: Int): [Album]
+    getPlaylists(limit: Int): [Playlist]
 
     getOneArtist(slug: String): ArtistDetaile
     getOneAlbum(slug: String): AlbumDetaile
@@ -55,6 +64,9 @@ const typeDefs = gql`
   type Mutation {
     signUp(username: String!, password: String!): User
     signIn(username: String!, password: String!): User
+
+    createPlaylist(name: String!): Playlist
+    addToPlaylist(trackId: String!, playlistId: String!): Playlist
   }
 `;
 

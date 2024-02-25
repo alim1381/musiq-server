@@ -11,22 +11,27 @@ const server = new ApolloServer({
     const token = req.headers.authorization;
     if (!token) return { isLogged: false, userData: null };
 
-    const [bearer, accessToken] = token.split(" ");
-    const data = jwt.verify(accessToken, process.env.JWT_SECRET_KEY);
+    try {
+      const [bearer, accessToken] = token.split(" ");
+      const data = jwt.verify(accessToken, process.env.JWT_SECRET_KEY);
 
-    if (typeof data == "object" && "id" in data) {
-      let user = await UserModel.findById(data.id, {
-        password: 0,
-        createdAt: 0,
-        updatedAt: 0,
-        __v: 0,
-      }).lean();
-      if (!user) return { isLogged: false, userData: null };
+      if (typeof data == "object" && "id" in data) {
+        let user = await UserModel.findById(data.id, {
+          password: 0,
+          createdAt: 0,
+          updatedAt: 0,
+          __v: 0,
+        }).lean();
+        if (!user) return { isLogged: false, userData: null };
 
-      // user valid
-      return { isLogged: true, userData: user };
+        // user valid
+        return { isLogged: true, userData: user };
+      }
+
+      return { isLogged: false, userData: null };
+    } catch (error) {
+      return { isLogged: false, userData: null };
     }
-    return { isLogged: false, userData: null };
   },
 });
 

@@ -1,4 +1,5 @@
 const authController = require("../controllers/auth.controller");
+const playlistController = require("../controllers/playlist.controller");
 const publicController = require("../controllers/public.controller");
 
 const resolvers = {
@@ -6,6 +7,7 @@ const resolvers = {
     getTracks: publicController.getTracks,
     getArtists: publicController.getArtists,
     getAlbums: publicController.getAlbums,
+    getPlaylists: publicController.getPlaylists,
 
     getOneArtist: publicController.getOneArtist,
     getOneAlbum: publicController.getOneAlbum,
@@ -15,6 +17,9 @@ const resolvers = {
   Mutation: {
     signUp: authController.signUp,
     signIn: authController.signIn,
+
+    createPlaylist: playlistController.createPlaylist,
+    addToPlaylist: playlistController.addToPlaylist,
   },
 };
 

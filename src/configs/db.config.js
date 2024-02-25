@@ -19,8 +19,4 @@ async function dbConnection() {
   }
 }
 
-function schemasRegister() {
-  return true;
-}
-
 module.exports = { dbConnection };

@@ -2,6 +2,7 @@ const { gql } = require("apollo-server-express");
 
 const typeDefs = gql`
   type Artist {
+    id: String
     name: String
     avatar: String
     slug: String
@@ -9,6 +10,7 @@ const typeDefs = gql`
   }
 
   type Album {
+    id: String!
     name: String!
     slug: String!
     cover: String!
@@ -24,18 +26,35 @@ const typeDefs = gql`
     listen_count: Int
   }
 
-  input NewUserInput {
-    name: String
-    username: String
-    password: String
+  type User {
+    id: String!
+    username: String!
+    token: String!
+  }
+
+  type ArtistDetaile {
+    information: Artist
+    tracks: [Track]
+  }
+
+  type AlbumDetaile {
+    information: Album
+    tracks: [Track]
   }
 
   type Query {
     getTracks(limit: Int, category: String): [Track]
+    getArtists(limit: Int): [Artist]
+    getAlbums(limit: Int): [Album]
+
+    getOneArtist(slug: String): ArtistDetaile
+    getOneAlbum(slug: String): AlbumDetaile
+    getOneTrack(slug: String): Track
   }
 
   type Mutation {
-    createNewUser(input: NewUserInput): Track
+    signUp(username: String!, password: String!): User
+    signIn(username: String!, password: String!): User
   }
 `;
 

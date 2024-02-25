@@ -1,4 +1,5 @@
 const express = require("express");
+const authController = require("./src/controllers/auth.controller");
 const app = express();
 require("dotenv").config();
 

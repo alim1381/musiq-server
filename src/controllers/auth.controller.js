@@ -17,6 +17,12 @@ class AuthController extends Controller {
     let user = await this.#authService.loginUser({ username, password });
     return user;
   }
+
+  async whoIAm(root, inputs, { isLogged, userData }) {
+    if (!isLogged) throw new Error("You must be logged in to see your data.");
+
+    return { id: userData._id.toString(), username: userData.username };
+  }
 }
 
 module.exports = new AuthController();

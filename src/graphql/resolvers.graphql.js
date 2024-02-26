@@ -14,6 +14,7 @@ const resolvers = {
     getOneAlbum: publicController.getOneAlbum,
     getOneTrack: publicController.getOneTrack,
     getOnePlaylist: playlistController.getOnePlaylist,
+    whoIAm: authController.whoIAm,
   },
 
   Mutation: {

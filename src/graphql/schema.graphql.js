@@ -73,6 +73,7 @@ const typeDefs = gql`
     getOneAlbum(slug: String): AlbumDetaile
     getOneTrack(slug: String): Track
     getOnePlaylist(slug: String): Playlist
+    whoIAm: LikedUser
   }
 
   type Mutation {

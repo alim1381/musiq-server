@@ -1,7 +1,10 @@
 const express = require("express");
-const authController = require("./src/controllers/auth.controller");
 const app = express();
+const cors = require("cors");
 require("dotenv").config();
+
+//enable CORS for all domains
+app.use(cors({ origin: "*" }));
 
 // graphql server setup
 require("./src/configs/graphql.config").config(app);

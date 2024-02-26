@@ -24,6 +24,7 @@ const resolvers = {
     removeFromPlaylist: playlistController.removeFromPlaylist,
     toLike: commentController.toLike,
     createComment: commentController.createComment,
+    searchTrack: publicController.searchTrack,
   },
 };
 

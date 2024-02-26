@@ -84,7 +84,8 @@ const typeDefs = gql`
     removeFromPlaylist(trackId: String!, playlistId: String!): String!
 
     toLike(trackId: String!): String!
-    createComment(trackId: String! , text: String!) : String!
+    createComment(trackId: String!, text: String!): String!
+    searchTrack(name: String!): [Track]
   }
 `;
 

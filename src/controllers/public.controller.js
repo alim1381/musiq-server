@@ -110,6 +110,16 @@ class PublicController extends Controller {
 
     return track;
   }
+
+  async searchTrack(root, { name }) {
+    let tracks = await this.#trackModel
+      .find({ name: { $regex: name } })
+      .populate("artist")
+      .populate("album")
+      .populate("likes", "-password -__v");
+
+    return tracks;
+  }
 }
 
 module.exports = new PublicController();

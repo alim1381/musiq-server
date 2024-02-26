@@ -23,6 +23,7 @@ const typeDefs = gql`
     path: String
     artist: Artist
     album: Album
+    likes: [LikedUser]
     listen_count: Int
   }
 
@@ -30,6 +31,11 @@ const typeDefs = gql`
     id: String!
     username: String!
     token: String!
+  }
+
+  type LikedUser {
+    id: String!
+    username: String!
   }
 
   type ArtistDetaile {
@@ -46,8 +52,14 @@ const typeDefs = gql`
     id: String!
     name: String!
     slug: String!
-    userId: String!
+    userId: LikedUser
     tracks: [Track]
+  }
+
+  type Comment {
+    id: String!
+    text: String!
+    userId: LikedUser
   }
 
   type Query {
@@ -55,18 +67,24 @@ const typeDefs = gql`
     getArtists(limit: Int): [Artist]
     getAlbums(limit: Int): [Album]
     getPlaylists(limit: Int): [Playlist]
+    getComments(trackId: String!): [Comment]
 
     getOneArtist(slug: String): ArtistDetaile
     getOneAlbum(slug: String): AlbumDetaile
     getOneTrack(slug: String): Track
+    getOnePlaylist(slug: String): Playlist
   }
 
   type Mutation {
     signUp(username: String!, password: String!): User
     signIn(username: String!, password: String!): User
 
-    createPlaylist(name: String!): Playlist
-    addToPlaylist(trackId: String!, playlistId: String!): Playlist
+    createPlaylist(name: String!): String!
+    addToPlaylist(trackId: String!, playlistId: String!): String!
+    removeFromPlaylist(trackId: String!, playlistId: String!): String!
+
+    toLike(trackId: String!): String!
+    createComment(trackId: String! , text: String!) : String!
   }
 `;
 

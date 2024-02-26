@@ -11,6 +11,19 @@ class PlaylistController extends Controller {
     this.#trackModel = trackModel;
   }
 
+  async getOnePlaylist(root, { slug }) {
+    let playlist = await this.#playlistModel
+      .findOne({ slug })
+      .populate({
+        path: "tracks",
+        populate: [{ path: "artist" }, { path: "album" }, { path: "likes" }],
+      })
+      .populate("userId");
+    if (!playlist) throw new Error(`No playlist found with the slug ${slug}`);
+
+    return playlist;
+  }
+
   async createPlaylist(root, { name }, { isLogged, userData }) {
     // Check if the user is logged in
     if (!isLogged || !userData) throw new Error("Unauthorized");
@@ -26,7 +39,7 @@ class PlaylistController extends Controller {
       tracks: [],
     });
 
-    return newPlaylist;
+    return "Playlist Created Successfully!";
   }
 
   async addToPlaylist(root, { trackId, playlistId }, { isLogged, userData }) {
@@ -53,19 +66,33 @@ class PlaylistController extends Controller {
     playlist.tracks.push(track._id);
     await playlist.save();
 
-    // Returning the updated playlist
-    await playlist.populate({
-      path: "tracks",
-      populate: [
-        {
-          path: "album",
-        },
-        {
-          path: "artist",
-        },
-      ],
-    });
-    return playlist;
+    return "Track added successfully to the playlist.";
+  }
+  async removeFromPlaylist(
+    root,
+    { trackId, playlistId },
+    { isLogged, userData }
+  ) {
+    //  Checking if the user is logged and has access
+    if (!isLogged || !userData) throw new Error("Unauthorized");
+
+    // Getting the data from the database
+    const playlist = await this.#playlistModel.findById(playlistId);
+    // If the playlist doesn't have any tracks
+    if (!playlist || playlist.userId.toString() !== userData._id.toString())
+      throw new Error(`The playlist is not definde`);
+
+    // Removing the track from the array
+    const itemIndex = playlist.tracks.findIndex(
+      (item) => item._id.toString() == trackId.toString()
+    );
+    if (itemIndex === -1) throw new Error("Track not in list!");
+
+    // Remove the element from the array
+    playlist.tracks.splice(itemIndex, 1);
+    await playlist.save();
+
+    return `Removed from playlist!`;
   }
 }
 

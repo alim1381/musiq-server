@@ -22,6 +22,7 @@ class PublicController extends Controller {
       .find({})
       .populate("artist")
       .populate("album")
+      .populate("likes", "-password -__v")
       .limit(limit)
       .sort(
         category === "hot-tracks"
@@ -57,8 +58,12 @@ class PublicController extends Controller {
           {
             path: "artist",
           },
+          {
+            path: "likes",
+          },
         ],
       })
+      .populate("userId")
       .limit(limit);
     if (playlists) return playlists;
   }
@@ -71,7 +76,9 @@ class PublicController extends Controller {
     const tracks = await this.#trackModel
       .find({ artist: artist._id })
       .populate("artist")
-      .populate("album");
+      .populate("album")
+      .populate("likes", "-password -__v");
+
     return { information: artist, tracks };
   }
 
@@ -82,37 +89,26 @@ class PublicController extends Controller {
     const tracks = await this.#trackModel
       .find({ album: album._id })
       .populate("artist")
-      .populate("album");
+      .populate("album")
+      .populate("likes", "-password -__v");
     return { information: album, tracks };
   }
 
   async getOneTrack(root, { slug }) {
+    // add a number of plays after fetch this method
+    // check if track exists in database
     const track = await this.#trackModel
       .findOne({ slug: slug })
       .populate("artist")
-      .populate("album");
+      .populate("album")
+      .populate("likes", "-password -__v");
     if (!track) throw new Error("track not found");
 
+    // add to number of plays and return
+    track.listen_count += 1;
+    await track.save();
+
     return track;
-  }
-
-  async getOnePlaylist(root, { slug }) {
-    const playlist = await this.#playlistModel
-      .findOne({ slug: slug })
-      .populate({
-        path: "tracks",
-        populate: [
-          {
-            path: "album",
-          },
-          {
-            path: "artist",
-          },
-        ],
-      });
-    if (!playlist) throw new Error("playlist not found");
-
-    return playlist;
   }
 }
 

@@ -34,7 +34,7 @@ class PlaylistController extends Controller {
     // Save to database
     let newPlaylist = await this.#playlistModel.create({
       name: name,
-      slug: name.toLowerCase().trim(),
+      slug: name.replaceAll(" ", "").toLowerCase(),
       userId: userData._id,
       tracks: [],
     });
